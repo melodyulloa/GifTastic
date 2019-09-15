@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vanidosa</title>
+    <style> body{
+      background-color: lightpink;
+    }</style>
+</head>
+
+<body>
+    <div id="collection">
+    <button data-makeup="lipgloss">gloss</button>
+    <button data-makeup="foundation">matte</button>
+    <button data-makeup="lashes">lashes</button>
+    <button data-makeup="highlighter">glitter</button>
+    </div>
+    <br>
+    <br>
+    <form id="makeup-form">
+      <label for="makeup-input">How Vanidosa are you?</label>
+      <input type="text" id="makeup-input"><br>
+      <br>
+    
+      <input id="add-makeup" type="submit" value="Add your poison.." >
+    </form>
+
+    <div id="gifs-container">
+      <div id="gifs-appear-here">
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+     
+     var topics= ["gloss","matte","lashes","glitter"];
+      $("#add-makeup").on("click", function(e){
+        e.preventDefault();
+        console.log("collection");
+        let newBtn= document.createElement("button");
+        let value = document.getElementById("makeup-input").value;
+        newBtn.innerText=value;
+        // newBtn.setAttribute("onclick", 'test()');
+        newBtn.onclick = function(x){
+          console.log(x.target);
+          test(x.target);
+        }
+
+        newBtn.setAttribute("data-makeup", value);
+        document.getElementById("collection").appendChild(newBtn);
+        
+      });
+
+      $("button").on("click", function() {
+        console.log("clicked button");
+        //remove old gifs
+        let gifsContainer = document.getElementById("gifs-container");
+        let gifsBox = document.createElement('div');
+        gifsBox.id = "gifs-appear-here";
+        gifsContainer.removeChild(gifsContainer.lastElementChild);
+        
+        gifsContainer.appendChild(gifsBox);
+        
+        var makeup = $(this).attr("data-makeup");
+  
+        
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + makeup+
+         "&api_key=S9HFOcl1G0cMQg4OavmWJ2kyhdCQ6JkO&limit=10";
+        
+  
+        
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        
+          .then(function(response) {
+            console.log(queryURL);
+  
+            console.log(response);
+            
+            var results = response.data;
+  
+            
+            for (var i = 0; i < results.length; i++) {
+  
+              
+              var makeupDiv = $("<div>");
+  
+              
+              var p = $("<p>").text("Reviews " + results[i].rating);
+  
+              
+              var makeupImage = $("<img>");
+              
+              makeupImage.attr("src", results[i].images.fixed_height.url);
+  
+              
+              makeupDiv.append(p);
+            makeupDiv.append(makeupImage);
+  
+              
+              $("#gifs-appear-here").prepend(makeupDiv);
+            }
+          });
+      });
+      
+     function test(snow){
+
+      console.log("clicked button");
+        //remove old gifs
+        let gifsContainer = document.getElementById("gifs-container");
+        let gifsBox = document.createElement('div');
+        gifsBox.id = "gifs-appear-here";
+        gifsContainer.removeChild(gifsContainer.lastElementChild);
+        
+        gifsContainer.appendChild(gifsBox);
+
+
+
+        var makeup = $(snow).attr("data-makeup");
+        
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + makeup+
+         "&api_key=S9HFOcl1G0cMQg4OavmWJ2kyhdCQ6JkO&limit=10";
+        
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        
+          .then(function(response) {
+            console.log(queryURL);
+  
+            console.log(response);
+            
+            var results = response.data;
+  
+            
+            for (var i = 0; i < results.length; i++) {
+  
+              
+              var makeupDiv = $("<div>");
+  
+              
+              var p = $("<p>").text("Reviews " + results[i].rating);
+  
+              
+              var makeupImage = $("<img>");
+              
+              makeupImage.attr("src", results[i].images.fixed_height.url);
+  
+              
+              makeupDiv.append(p);
+            makeupDiv.append(makeupImage);
+  
+              
+              $("#gifs-appear-here").prepend(makeupDiv);
+            }
+          });
+     }
+      
+      
+    </script>
+  </body>
+  
+  </html>
